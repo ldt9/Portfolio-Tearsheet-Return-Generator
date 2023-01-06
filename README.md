@@ -15,6 +15,9 @@ This program creates a brief, two-page document for an investor to summarize the
 - Automatically filters out non-trading days based on the market 
 - Sets NYSE as the calendar, and then standardizes the timestamps to make them easy to join on later
 
+#### `` def read_csv(folder, csv_name) ``
+- Takes a folder name and filename for where the .csv if located and creates a dataframe out of it
+
 #### `` def get_data(stocks, start, end) ``
 - Takes an array of stock tickers with a start and end date and grabs the data using the YFinance library
 
@@ -49,8 +52,49 @@ This program creates a brief, two-page document for an investor to summarize the
 #### `` def per_day_portfolio_calcs(per_day_holdings, daily_adj_close, stocks_start) ``
 - Runs `` modified_cost_per_share ``, `` portfolio_end_of_year_stats ``, ``  portfolio_start_of_year_stats ``, `` calc_returns `` and returns a daily snapshot of the portfolio
 
+#### `` def format_returns(pdpc, metric_to_group) ``
+- Formats the per day portfolio calculations for use with the QuantStats library
+
 #### `` def generate_report(returns, folder, rf=0.) ``
 - Utilizes the QuantStats library to create a .html and .pdf of the tearsheet returns as well as display the output to the consol with quantitative statistics
+
+## How to use this project in Google Colab
+1. Connect to a Runtime
+2. Press `` Ctrl + F9 ``
+
+## Example Quick Start Main
+``` Python
+  # MAKE SURE YOU CONNECT TO YOUR GOOGLE DRIVE BEFORE EXECUTING THIS
+  portfolio_df = read_csv('Tearsheet Generator', 'TransactionHistory2020-2022')
+
+  symbols = portfolio_df.Symbol.unique()
+  stocks_start = '2020-04-30' # REPLACE WITH 1 DAY AFTER YOUR PORTFOLIO START DATE
+  today = datetime.datetime.today()
+  stocks_end = today.strftime("%Y-%m-%d")
+
+  daily_adj_close = get_data(symbols, stocks_start, stocks_end)
+  daily_adj_close = daily_adj_close[['Close']].reset_index() 
+
+  market_cal = create_market_cal(stocks_start, stocks_end)
+
+  active_portfolio = portfolio_start_balance(portfolio_df, stocks_start)
+  
+  positions_per_day = time_fill(active_portfolio, market_cal)
+  
+  pdpc = per_day_portfolio_calcs(positions_per_day, daily_adj_close, stocks_start)
+  
+  portReturns = format_returns(pdpc, 'Ticker Share Value')
+
+  generate_report(portReturns, 'Tearsheet Generator')
+```
+
+## Example Output
+
+### HTML
+![quantstats-tearsheet](https://user-images.githubusercontent.com/84938803/210924445-0e251786-f38b-46d3-a78d-2d2b9e6539b5.jpg)
+
+### PDF
+[Tearsheet_2023-01-06.pdf](https://github.com/ldt9/Portfolio-Tearsheet-Return-Generator/files/10357085/Tearsheet_2023-01-06.pdf)
 
 ## Libraries Used
 - [YFinance](https://github.com/ranaroussi/yfinance)
