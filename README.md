@@ -64,7 +64,9 @@ This program creates a brief, two-page document for an investor to summarize the
 
 ## Example Quick Start Main
 ``` Python
-  # MAKE SURE YOU CONNECT TO YOUR GOOGLE DRIVE BEFORE EXECUTING THIS
+  from google.colab import drive
+  drive.mount('/content/drive')
+  
   portfolio_df = read_csv('Tearsheet Generator', 'TransactionHistory2020-2022')
 
   symbols = portfolio_df.Symbol.unique()
