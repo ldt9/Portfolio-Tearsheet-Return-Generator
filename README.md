@@ -90,6 +90,13 @@ This program creates a brief, two-page document for an investor to summarize the
   generate_report(portReturns, 'Tearsheet Generator')
 ```
 
+## Example Input .csv
+| Symbol        | Qty           | Type          | Open date      | Adj cost per share | Adj cost        |
+| ------------- | ------------- | ------------- | ------------- | ------------- | ------------- | 
+| AAPL  | 10 | Buy | 4/29/2020 | 71 | 710
+| MSFT | 10 | Buy | 5/1/2020 | 175 | 1750
+| AAPL | 5  | Sell.FIFO | 5/15/2020 | 77 | 385
+
 ## Example Output
 
 ### HTML
