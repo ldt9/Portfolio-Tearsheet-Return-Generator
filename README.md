@@ -64,30 +64,12 @@ This program creates a brief, two-page document for an investor to summarize the
 
 ## Example Quick Start Main
 ``` Python
+  # Mount Google Drive
   from google.colab import drive
   drive.mount('/content/drive')
-  
-  portfolio_df = read_csv('Tearsheet Generator', 'TransactionHistory2020-2022')
 
-  symbols = portfolio_df.Symbol.unique()
-  stocks_start = '2020-04-30' # REPLACE WITH 1 DAY AFTER YOUR PORTFOLIO START DATE
-  today = datetime.datetime.today()
-  stocks_end = today.strftime("%Y-%m-%d")
-
-  daily_adj_close = get_data(symbols, stocks_start, stocks_end)
-  daily_adj_close = daily_adj_close[['Close']].reset_index() 
-
-  market_cal = create_market_cal(stocks_start, stocks_end)
-
-  active_portfolio = portfolio_start_balance(portfolio_df, stocks_start)
-  
-  positions_per_day = time_fill(active_portfolio, market_cal)
-  
-  pdpc = per_day_portfolio_calcs(positions_per_day, daily_adj_close, stocks_start)
-  
-  portReturns = format_returns(pdpc, 'Ticker Share Value')
-
-  generate_report(portReturns, 'Tearsheet Generator')
+  # Gather Data and Generate Report
+  generate_report('Tearsheet Generator', '2020-04-30')
 ```
 
 ## Example Input .csv
