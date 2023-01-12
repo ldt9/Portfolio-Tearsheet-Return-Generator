@@ -69,7 +69,7 @@ This program creates a brief, two-page document for an investor to summarize the
   drive.mount('/content/drive')
 
   # Gather Data and Generate Report
-  generate_report('Tearsheet Generator', '2020-04-30')
+  generate_report('Tearsheet Generator', 'TransactionHistory2020-2022', '2020-04-30')
 ```
 
 ## Example Input .csv
