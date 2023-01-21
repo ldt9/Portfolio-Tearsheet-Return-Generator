@@ -23,6 +23,7 @@ This program creates a brief, two-page document for an investor to summarize the
 
 #### `` def position_adjust(daily_positions, sale) ``
 - Create an empty dataframe called stocks_with_sales to which we'll add adjusted positions, and another dataframe holding all of the transactions labeled as buys
+- Here we calculate the realized gain of each sell order
 
 #### `` def portfolio_start_balance(portfolio, start_date) ``
 - Add to the adjusted positions dataframe, the positions that never had sales, sales that occur in the future, and any zeroed out rows to create a record of your active holdings as of the start date
@@ -30,12 +31,14 @@ This program creates a brief, two-page document for an investor to summarize the
 #### `` def fifo(daily_positions, sales, date) ``
 - Flters sales to find any that have occurred on the current date and creates a dataframe of positions not affected by sales
 - Then use `` position_adjust `` to zero-out any positions with active sales and append the positions with no changes, leaving you with an accurate daily snapshot of your porfolio positions
+- Any rows with zero 'Qty' are left for realized gain performance calculations
 
 #### `` def time_fill(portfolio, market_cal) ``
 - Provide our dataframe of active positions, find the sales, and zero-out sales against buy positions. 
 - Loop through using our market_cal list with valid trading days
 - Filter to positions that have occurred before or at the current date and make sure there are only buys. 
 - Add a Date Snapshot column with the current date in the market_cal loop, then append it to our per_day_balance list
+- Before adjusting a position, we make sure to save all future transactions to another dataframe and append them later
 
 #### `` def modified_cost_per_share(portfolio, adj_close, start_date) ``
 - Merges provided dataframes and calculates daily adjusted cost
@@ -52,8 +55,8 @@ This program creates a brief, two-page document for an investor to summarize the
 #### `` def per_day_portfolio_calcs(per_day_holdings, daily_adj_close, stocks_start) ``
 - Runs `` modified_cost_per_share ``, `` portfolio_end_of_year_stats ``, ``  portfolio_start_of_year_stats ``, `` calc_returns `` and returns a daily snapshot of the portfolio
 
-#### `` def format_returns(pdpc, metric_to_group) ``
-- Formats the per day portfolio calculations for use with the QuantStats library
+#### `` def format_returns(pdpc, metric_to_group1, metric_to_group2, div, total_cash) ``
+- Formats the per day portfolio calculations for use with the QuantStats library by adding up the daily realized, unrealized gains, dividends and cash
 
 #### `` def generate_report(returns, folder, rf=0.) ``
 - Utilizes the QuantStats library to create a .html and .pdf of the tearsheet returns as well as display the output to the consol with quantitative statistics
@@ -64,12 +67,12 @@ This program creates a brief, two-page document for an investor to summarize the
 
 ## Example Quick Start Main
 ``` Python
-  # Mount Google Drive
-  from google.colab import drive
-  drive.mount('/content/drive')
+# Mount Google Drive
+from google.colab import drive
+drive.mount('/content/drive')
 
-  # Gather Data and Generate Report
-  generate_report('Tearsheet Generator', 'TransactionHistory2020-2022', '2020-04-30')
+# Gather Data and Generate Report
+generate_report('Tearsheet Generator', 'TransactionHistory2020-2022withCash', '2020-04-30')
 ```
 
 ## Example Input .csv
@@ -100,4 +103,3 @@ This program creates a brief, two-page document for an investor to summarize the
 - https://towardsdatascience.com/modeling-your-stock-portfolio-performance-with-python-fbba4ef2ef11
 - https://github.com/mattygyo/stock_portfolio_analysis/blob/master/portfolio_analysis.py
 - https://github.com/ranaroussi/quantstats
-
